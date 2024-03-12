@@ -1,0 +1,10 @@
+{
+  "extends": "./node_modules/@tsconfig/node-lts/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./build",
+    "sourceMap": true,
+  },
+  "include": [
+    "./src/**/*"
+  ],
+}

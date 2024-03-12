@@ -1,0 +1,28 @@
+{
+  "name": "websocket-labs-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:build": "del-cli ./build && npx tsc --project ./tsconfig.json",
+    "dev:serve": "node ./build/main.js",
+    "dev:start": "npm run dev:build && npm run dev:serve",
+    "dev": "npx nodemon --config ./nodemon.json",
+    "prod:build": "del-cli ./build && npx tsc --project ./tsconfig.json",
+    "prod:serve": "node ./build/main.js",
+    "prod": "npm run prod:build && npm run prod:serve"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.42.0"
+  },
+  "devDependencies": {
+    "@tsconfig/node-lts": "^20.1.1",
+    "@types/node": "^20.11.25",
+    "del-cli": "^5.1.0",
+    "nodemon": "^3.1.0",
+    "typescript": "^5.4.2"
+  }
+}
