@@ -1,4 +1,6 @@
 import uWs from "uWebSockets.js";
+import { readFileSync, stat, createReadStream } from 'fs';
+import { join } from 'path';
 
 const app = uWs.App();
 const port = 8080;
@@ -7,6 +9,7 @@ const topics = {
   zoneGateFixed: "zone/gate/fixed",
   zoneGateEcho: "zone/gate/echo"
 };
+const publicDataPath = './public/data.txt';
 let broadcastFixedTimeMs = 1_000;
 
 function getRandomNumber(min: number, max: number, skipList: number[] = []): number {
@@ -69,6 +72,10 @@ function broadcastingFixed(): void {
   }, 100);
 }
 
+function getDataContent(path: string): string {
+  return <string>readFileSync(path, 'utf-8');
+}
+
 app.ws("/zone-gate-auto", {
   compression: uWs.SHARED_COMPRESSOR,
   maxPayloadLength: 16 * 1024 * 1024,
@@ -110,6 +117,31 @@ app.get("/set-fixed-time", (res, req) => {
     res.end("ok");
   } catch (error: any) {
     console.error(error?.message ? error.message : error);
+    res.end("error");
+  }
+});
+
+app.get("/plain-data", (res, req) => {
+  try {
+    const content = getDataContent(publicDataPath);
+    res.end(content);
+  } catch (error: any) {
+    console.error(error?.message ? error.message : error);
+    res.end("error");
+  }
+});
+
+app.get("/file-data", (res, req) => {
+  try {
+    const filename = "data.txt";
+    const content = getDataContent(publicDataPath);
+
+    res.writeHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.writeHeader('Content-Type', 'text/plain');
+    res.end(content);
+  } catch (error: any) {
+    console.error(error?.message ? error.message : error);
+    res.end("error");
   }
 });
 
